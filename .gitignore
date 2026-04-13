@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+*.egg-info/
+
+# ML artifacts
+backend/ml/artifacts/rf_model.joblib
+backend/ml/artifacts/training_data.csv
+
+# Database
+*.db
+*.sqlite
+
+# Environment
+.env
+
+# Node
+frontend/node_modules/
+frontend/dist/
+
+# IDE
+.vscode/
+.idea/
+
+# Misc
+.DS_Store
+
+# Docker
+*.log
