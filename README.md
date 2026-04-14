@@ -54,7 +54,7 @@ MQTT Telemetry (ICS Devices / Simulator)
 - Python 3.11+
 - Node 20+
 - Mosquitto MQTT broker running on localhost:1883
-- Ollama running on 192.168.1.4:11434 with qwen3:4b pulled
+- Ollama running on xxx.xx.xxxxx with qwen3:4b pulled
 
 ### 1. Backend
 
@@ -69,7 +69,7 @@ python -m ml.model
 python ../scripts/seed_devices.py
 
 # Start API
-uvicorn api.main:app --reload --host 0.0.0.0 --port 8000
+uvicorn api.main:app --reload --host 0.0.0.0 --port xxxx
 ```
 
 ### 2. Frontend
@@ -78,7 +78,7 @@ uvicorn api.main:app --reload --host 0.0.0.0 --port 8000
 cd frontend
 npm install
 npm run dev
-# Opens at http://localhost:5173
+# Opens at http://localhost:xxxx
 ```
 
 ### 3. Simulator (in a new terminal)
@@ -108,8 +108,8 @@ docker compose up -d                  # broker + backend + frontend
 docker compose --profile sim up -d   # also start simulator
 ```
 
-Dashboard: http://localhost:5173  
-API docs:   http://localhost:8000/docs
+Dashboard: http://localhost:xxxx
+API docs:   http://localhost:xxxxx/docs
 
 ---
 
