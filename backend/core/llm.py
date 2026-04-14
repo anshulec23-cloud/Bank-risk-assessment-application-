@@ -16,17 +16,16 @@ async def llm_generate(prompt: str, system: str = "") -> str:
     if system:
         payload["system"] = system
 
-    async with httpx.AsyncClient(timeout=60.0) as client:
-        try:
+    try:
+        async with httpx.AsyncClient(timeout=10.0) as client:
             resp = await client.post(
                 f"{settings.OLLAMA_BASE_URL}/api/generate",
                 json=payload,
             )
             resp.raise_for_status()
             return resp.json().get("response", "").strip()
-        except Exception as e:
-            # Fallback: return a templated response so pipeline doesn't break
-            return f"[LLM unavailable: {e}] — Rule-based report generated."
+    except Exception as e:
+        return f"[Rule-based classification]"
 
 
 def llm_generate_sync(prompt: str, system: str = "") -> str:
@@ -35,11 +34,10 @@ def llm_generate_sync(prompt: str, system: str = "") -> str:
     try:
         loop = asyncio.get_event_loop()
         if loop.is_running():
-            # If inside an async context (e.g. FastAPI), use a thread
             import concurrent.futures
             with concurrent.futures.ThreadPoolExecutor() as pool:
                 future = pool.submit(asyncio.run, llm_generate(prompt, system))
                 return future.result()
         return loop.run_until_complete(llm_generate(prompt, system))
-    except Exception as e:
-        return f"[LLM error: {e}]"
+    except Exception:
+        return "[Rule-based analysis]"

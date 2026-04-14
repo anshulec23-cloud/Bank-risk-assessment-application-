@@ -1,10 +1,9 @@
 """
 Agent 2: Classifier
-Determines attack type and severity using rule-based heuristics + LLM explanation.
+Determines attack type and severity using rule-based heuristics.
 Populates state['classification'].
 """
 from pipeline.state import PipelineState
-from core.llm import llm_generate_sync
 
 
 # Rule-based signature matching (fast, deterministic)
@@ -51,27 +50,11 @@ def classifier_node(state: PipelineState) -> PipelineState:
     t = state["telemetry"]
     attack_type, severity, confidence = _rule_based_classify(t)
 
-    # LLM generates a plain-English explanation for non-technical stakeholders
-    prompt = f"""
-You are a cybersecurity analyst for an industrial control system.
-A sensor anomaly has been detected with these readings:
-  Temperature: {t['temperature']}°C (normal ~65°C)
-  Pressure: {t['pressure']} bar (normal ~4.5 bar)
-  Flow rate: {t['flow_rate']} L/min (normal ~120 L/min)
-  Voltage: {t['voltage']} V (normal ~230 V)
-
-Classified attack: {attack_type}, Severity: {severity}
-
-In 2-3 plain English sentences, explain what this attack means for the facility
-and why it is dangerous. Write for a non-technical CFO audience.
-"""
-    explanation = llm_generate_sync(prompt)
-
     state["classification"] = {
         "attack_type": attack_type,
         "severity":    severity,
         "confidence":  confidence,
-        "explanation": explanation,
+        "explanation": f"Detected {attack_type} attack - immediate action required.",
     }
 
     return state
